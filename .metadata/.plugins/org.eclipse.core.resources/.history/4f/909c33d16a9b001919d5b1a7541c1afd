@@ -1,0 +1,88 @@
+----------BRISANJE TABELA----------
+DROP TABLE IF EXISTS liga CASCADE;
+DROP TABLE IF EXISTS tim CASCADE;
+DROP TABLE IF EXISTS nacionalnost CASCADE;
+DROP TABLE IF EXISTS igrac CASCADE;
+
+----------BRISANJE SEKVENCI----------
+DROP SEQUENCE IF EXISTS liga_seq;
+DROP SEQUENCE IF EXISTS tim_seq;
+DROP SEQUENCE IF EXISTS nacionalnost_seq;
+DROP SEQUENCE IF EXISTS igrac_seq;
+
+----------KREIRANJE TABELA----------
+--TABELA LIGA--
+CREATE TABLE liga(
+	id INTEGER NOT NULL,
+	naziv VARCHAR(100) NOT NULL,
+	oznaka VARCHAR(50) NOT NULL
+);
+--TABELA TIM--
+CREATE TABLE tim(
+	id INTEGER NOT NULL,
+	naziv VARCHAR(100) NOT NULL,
+	osnovan DATE NOT NULL,
+	sediste VARCHAR(100) NOT NULL,
+	liga INTEGER NOT NULL
+);
+--TABELA NACIONALNOST--
+CREATE TABLE nacionalnost(
+	id INTEGER NOT NULL,
+	naziv VARCHAR(100) NOT NULL,
+	skracenica VARCHAR(50) NOT NULL
+);
+--TABELA IGRAC--
+CREATE TABLE igrac(
+	id INTEGER NOT NULL,
+	ime VARCHAR(50) NOT NULL,
+	prezime VARCHAR(50) NOT NULL,
+	broj_reg VARCHAR(50) NOT NULL,
+	datum_rodjenja DATE NOT NULL,
+	nacionalnost INTEGER NOT NULL,
+	tim INTEGER NOT NULL
+);
+----------DODAVANJE PRIMARNIH KLJUCEVA----------
+ALTER TABLE liga ADD CONSTRAINT pk_liga
+	PRIMARY KEY(id);
+
+ALTER TABLE tim ADD CONSTRAINT pk_tim
+	PRIMARY KEY(id);
+	
+ALTER TABLE nacionalnost ADD CONSTRAINT pk_nacionalnost
+	PRIMARY KEY(id);	
+
+ALTER TABLE igrac ADD CONSTRAINT pk_igrac
+	PRIMARY KEY(id);
+
+----------DODAVANJE STRANIH KLJUCEVA----------
+ALTER TABLE tim ADD CONSTRAINT fk_tim_liga
+	FOREIGN KEY(liga) REFERENCES liga(id);
+
+ALTER TABLE igrac ADD CONSTRAINT fk_igrac_nacionalnost
+	FOREIGN KEY(nacionalnost) REFERENCES nacionalnost(id);
+	
+ALTER TABLE igrac ADD CONSTRAINT fk_igrac_tim
+	FOREIGN KEY(tim) REFERENCES tim(id);
+	
+----------KREIRANJE INDEXA----------
+CREATE INDEX idxfk_tim_liga
+	ON tim(liga);
+
+CREATE INDEX idxfk_igrac_nacionalnost
+	ON igrac(nacionalnost);
+	
+CREATE INDEX idxfk_igrac_tim
+	ON igrac(tim);
+
+----------KREIRANJE SEKVENCI----------
+CREATE SEQUENCE liga_seq
+	INCREMENT 1;
+	
+CREATE SEQUENCE tim_seq
+	INCREMENT 1;
+	
+CREATE SEQUENCE nacionalnost_seq
+	INCREMENT 1;
+	
+CREATE SEQUENCE igrac_seq
+	INCREMENT 1;
